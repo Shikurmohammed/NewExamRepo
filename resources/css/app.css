@@ -1,0 +1,16 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+
+/* Additional styles */
+
+@import 'additional-styles/utility-patterns.css';
+@import 'additional-styles/flatpickr.css';
+@import 'tailwindcss/utilities';
+@import 'table-style.css';
+
+/* Font awesome imports */
+
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/regular.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
+@import '@fortawesome/fontawesome-free/css/brands.css';

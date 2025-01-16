@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Test extends Model
+{
+    //
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+    public function groups(){
+        return $this->belongsToMany(Group::class,'test_groups')->withPivot('test_id', 'group_id');
+    }
+
+}
