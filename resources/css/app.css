@@ -1,16 +1,25 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
 
 /* Additional styles */
 
-@import 'additional-styles/utility-patterns.css';
-@import 'additional-styles/flatpickr.css';
-@import 'tailwindcss/utilities';
-@import 'table-style.css';
+@import "additional-styles/utility-patterns.css";
+@import "additional-styles/flatpickr.css";
+@import "tailwindcss/utilities";
+@import "table-style.css";
 
 /* Font awesome imports */
 
-@import '@fortawesome/fontawesome-free/css/fontawesome.css';
-@import '@fortawesome/fontawesome-free/css/regular.css';
-@import '@fortawesome/fontawesome-free/css/solid.css';
-@import '@fortawesome/fontawesome-free/css/brands.css';
+@import "@fortawesome/fontawesome-free/css/fontawesome.css";
+@import "@fortawesome/fontawesome-free/css/regular.css";
+@import "@fortawesome/fontawesome-free/css/solid.css";
+@import "@fortawesome/fontawesome-free/css/brands.css";
+
+/* Font Inter*/
+@import "@fontsource/inter/400.css"; /* Regular weight */
+@import "@fontsource/inter/700.css"; /* Bold weight */
+@import "@fontsource/inter/index.css";
+
+@import "datatables.net-dt/css/dataTables.dataTables.css";
+@import "datatables.net-buttons-dt/css/buttons.dataTables.css";
+/* @import "../../vendor/power-components/livewire-powergrid/resources/css/powergrid.css"; */

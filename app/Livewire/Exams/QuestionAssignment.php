@@ -14,15 +14,15 @@ class QuestionAssignment extends Component
     use WithPagination;
     #[Computed()]
     public function tests(){
-        return Test::paginate(5);
+        return Test::all();
     }
     #[Computed()]
     public function topics(){
-        return Topic::paginate(3);
+        return Topic::all();
     }
     #[Computed()]
     public function questions(){
-        return Question::paginate(5);
+        return Question::all();
     }
 
     public function render()

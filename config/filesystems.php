@@ -35,6 +35,11 @@ return [
             'root' => storage_path('app'),
             'throw' => false,
         ],
+        'backup' => [
+            'driver' => 'local',
+            'root' => storage_path('app/AwashExam-backup'),
+            'throw' => false,
+        ],
 
         'public' => [
             'driver' => 'local',

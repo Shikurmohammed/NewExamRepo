@@ -5,16 +5,25 @@ namespace App\Livewire\Exams;
 use App\Models\Group;
 use App\Models\Test;
 use Carbon\Carbon;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class TestList extends Component
 {
-    use WithPagination;
+
     public $search;
 
     #[Computed()]
@@ -149,12 +158,7 @@ class TestList extends Component
         }
         //return redirect('/view_test');
     }
-    protected $listeners = ['questionAssigned' => 'handleQuestionAssigned'];
-    public function handleQuestionAssigned($questionType)
-    {
-        // Perform actions based on the question type received
-        noty()->livewire()->addSuccess("Question type {$questionType} received!");
-    }
+
     public function render()
     {
         return view('livewire.exams.test-list');

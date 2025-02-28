@@ -1,24 +1,40 @@
-<div class="col-span-full xl:col-span-8 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
+<div class="bg-white shadow-sm col-span-full xl:col-span-8 dark:bg-gray-800 rounded-xl">
 
     <header class="flex justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
 
         <h2 class="font-semibold text-gray-800 dark:text-gray-100">Topic List</h2>
         <div class="flex justify-between">
-            <!-- include topic-modal -->
+
+            <div class="flex items-center justify-between">
+                <form wire:submit.prevent="importTopics" class="flex items-center justify-between ">
+                    <input type="file" wire:model="file" required class="max-w:10" />
+                    <buttonwire:loading.attr="disabled" wire:loading.class="bg-gray-500"
+                    class="px-2 py-1 mt-2 mr-2 text-white rounded bg-slate-400">
+                    <i class="fa fa-upload"></i>
+                    Upload<i wire:loading="importTopics" class="fa fa-spinner fa-spin"></i></buttonwire:loading.attr=>
+
+
+                    @error('file')
+                        <span class="text-red-600">{{ $message }}</span>
+                    @enderror
+                </form>
+
+
+            </div>
             @livewire('modals.topic-modal')
             <!-- end-->
-            <input type="text" wire:model.live="search" placeholder="search here"
-                class="ml-5 mt-1 block w-1/10 border border-gray-300 rounded-md p-2 mr-0">
+            {{-- <input type="text" wire:model.live="search" placeholder="search here"
+                class="block p-2 mt-1 ml-5 mr-0 border border-gray-300 rounded-md w-1/10"> --}}
         </div>
     </header>
+    <livewire:topic-table />
 
-    <div class="p-3">
-        <!-- Table -->
+    {{-- <div class="p-3">
         <div class="overflow-x-auto">
-            <table class="table-auto w-full dark:text-gray-300">
-                <!-- Table header -->
+            <table id="topic_table" class="w-full table-auto datatable dark:text-gray-300">
+
                 <thead
-                    class="text-xs uppercase text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50 rounded-sm">
+                    class="text-xs text-gray-400 uppercase rounded-sm dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
                     <tr>
                         <th class="p-2">
                             <div class="font-semibold text-left">#</div>
@@ -43,9 +59,9 @@
                         </th>
                     </tr>
                 </thead>
-                <!-- Table body -->
+
                 <tbody class="text-sm font-medium divide-y divide-gray-100 dark:divide-gray-700/60">
-                    <!-- Row -->
+
                     @foreach ($topics as $topic)
                         <tr>
                             <td class="p-2">
@@ -73,8 +89,7 @@
 
                             <td class="p-2">
                                 <div class="text-center text-sky-500">
-                                    <a href="{{ url('edit_category', $topic->id) }}"><i class="fas fa-edit"
-                                            style="color:cyan"></i></a>
+                                    <a wire:click="alert('')"><i class="fas fa-edit" style="color:cyan"></i></a>
                                     <a wire:click="delete({{ $topic->id }})" style="cursor: pointer;">
                                         <i class="fas fa-trash" style="color:purple"></i></a>
                                 </div>
@@ -88,7 +103,13 @@
                     </h3>
                 @endif
             </table>
-            {{ $topics->links('vendor.livewire.tailwind') }}
         </div>
-    </div>
+    </div> --}}
 </div>
+@script()
+<script>
+    document.addEventListener('livewire:initialized', () => {
+
+    });
+</script>
+@endscript()

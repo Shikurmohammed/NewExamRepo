@@ -22,7 +22,7 @@
                     </div>
                     <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0 ">
                         <label class="block text-sm font-medium text-gray-700">Start</label>
-                        <input type="datetime-local" wire:model="start"
+                        <input type="datetime-local" wire:model.live="start"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2">
 
                         @error('test_name')
@@ -31,14 +31,14 @@
                     </div>
                     <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0 ">
                         <label class="block text-sm font-medium text-gray-700">End</label>
-                        <input type="datetime-local" wire:model="end"
+                        <input type="datetime-local" wire:model.live="end"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2">
                         @error('test_name')
                             <span class="px-2 w-full text-red-700">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="w-full md:w-1/6 px-3 mb-6 md:mb-0 ">
-                        <label class="block text-sm font-medium text-gray-700">End</label>
+                        <label class="block text-sm font-medium text-gray-700">Duration(min)</label>
                         <input type="number" wire:model="duration"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2">
                         @error('test_name')
@@ -49,11 +49,11 @@
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 ">
                         <label class="block text-sm font-medium text-gray-700">Exam Group</label>
-                        <select id="module_id" wire:model="group_id"
+                        <select  wire:model="group_id"
                             class="select2 appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
-                            <option value="">Select Module</option>
+                            <option value="">Select Group</option>
                             @foreach ($this->groups as $group)
-                                <option value="{{ $group->id }}" class="l1 text-white px-10">
+                                <option value="{{ $group->id }}" class="l1 text-white px-10" >
                                     {{ $group->name }}</option>
                             @endforeach
                         </select>
@@ -106,7 +106,7 @@
                     </div>
                     <div class="w-full md:w-1/6 px-3 mb-6 md:mb-0 ">
                         <label class="block text-sm font-medium text-gray-700">Exam password</label>
-                        <input type="password" wire:model="exam_password"
+                        <input type="password" wire:model="exam_password" autocomplete
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2">
                         @error('exam_password')
                             <span class="px-2 w-full text-red-700">{{ $message }}</span>
@@ -117,6 +117,22 @@
                         <input type="text" wire:model="score_unanswered"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2">
                         @error('score_unanswered')
+                            <span class="px-2 w-full text-red-700">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 ">
+                        <label class="block text-sm font-medium text-gray-700">Order Mode</label>
+                        <select wire:model="questions_order_mode"
+                            class="select2 appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+                            <option value="">Select Module</option>
+                            @foreach ($this->qordmode as $ok)
+                                <option value="{{ $ok['id'] }}" class="l1 text-white px-10"
+                                    @if ($this->questions_order_mode == $ok) selected @endif>
+                                    {{ $ok['name'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('questions_order_mode')
                             <span class="px-2 w-full text-red-700">{{ $message }}</span>
                         @enderror
                     </div>
@@ -233,7 +249,7 @@
                 </div>
                 <div class="flex justify-end w-full md:w-1/3 px-3 mb-6 md:mb-0 max-lg:2xl">
                     <div class="items-center">
-                        <button type="button" id="closeModal" wire:click="closeModal" @click="isOpen = false"
+                        <button type="button" wire:click="closeModal" @click="isOpen = false"
                             class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancel</button>
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
                     </div>

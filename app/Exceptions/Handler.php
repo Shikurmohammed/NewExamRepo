@@ -27,4 +27,24 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    //Custom error page for database connection exception
+    public function render1($request, Throwable $exception)
+    {
+        if ($exception instanceof \App\Exceptions\DatabaseConnectionException) {
+            return response()->view('errors.databaseIssue', [], 500);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        // Handle the DatabaseConnectionException
+        if ($exception instanceof DatabaseConnectionException) {
+            return response()->view('errors.databaseIssue', [], 500);
+        }
+
+        return parent::render($request, $exception);
+    }
 }

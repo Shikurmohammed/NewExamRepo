@@ -163,6 +163,7 @@ return [
         /*
          * Application Service Providers...
          */
+
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
@@ -171,6 +172,9 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
         Livewire\LivewireServiceProvider::class,
+        Spatie\LaravelIgnition\IgnitionServiceProvider::class,
+        App\Providers\DatabaseServiceProvider::class,
+
         //Filament\FilamentServiceProvider::class,
 
     ])->toArray(),

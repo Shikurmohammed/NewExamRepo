@@ -1,14 +1,29 @@
 <div x-data="{ isOpen: @entangle('isModalOpen') }">
-    <!-- Button to open modal -->
-    <button @click="isOpen = true" class="mt-2 bg-slate-400 text-white px-2 py-1 rounded"> <i
-            class="fa fa-plus-circle"></i> New</button>
 
+
+    <div class="flex items-center justify-between">
+        <form wire:submit.prevent="importModules" class="flex items-center justify-between ">
+            <input type="file" wire:model="file" required class="max-w:10" />
+            <button type="submit" wire:loading.attr="disabled" wire:loading.class="bg-gray-500"
+                class="px-2 py-1 mt-2 mr-2 text-white rounded bg-slate-400">
+                <i class="fa fa-upload"></i>
+                Upload<i wire:loading="importModules" class="fa fa-spinner fa-spin"></i></button>
+
+            @error('file')
+                <span class="text-red-600">{{ $message }}</span>
+            @enderror
+        </form>
+
+        <button @click="isOpen = true" class="px-2 py-1 mt-2 text-white rounded bg-slate-400"> <i
+                class="fa fa-plus-circle"></i> New</button>
+
+    </div>
     <!-- Modal -->
-    <div x-show="isOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+    <div x-show="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
         @click.away="isOpen = false" style="display: none;">
         <div class="modal-overlay" style="background: rgba(0, 0, 0, 0.5);"></div>
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full " x-show.transition.opacity="isOpen">
-            <h2 class="text-xl font-semibold mb-4">Create Module</h2>
+        <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg " x-show.transition.opacity="isOpen">
+            <h2 class="mb-4 text-xl font-semibold">Create Module</h2>
 
             @if (session()->has('success'))
                 <div class="text-green-700">
@@ -27,16 +42,16 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Module Name</label>
                     <input type="text" wire:model="module_name"
-                        class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
                     @error('module_name')
-                        <span class="px-2 w-full text-red-700">{{ $message }}</span>
+                        <span class="w-full px-2 text-red-700">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Owner</label>
                     <?php $currentUser = Auth::user()->name ? Auth::user()->name : ''; ?>
                     <input type="text" disabled wire:model="owner_name" value="{{ $currentUser }}"
-                        class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Enabled
@@ -46,10 +61,10 @@
 
                 <div class="flex justify-end">
                     <button type="button" id="closeModal" wire:click="closeModal" @click="isOpen = false"
-                        class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">
+                        class="px-4 py-2 mr-2 text-gray-700 bg-gray-300 rounded">
                         Cancel</button>
                     <button type="submit" wire:loading.attr="disabled" wire:loading.class="bg-gray-500"
-                        class="bg-green-500 text-white px-4 py-2 rounded">Submit <i wire:loading="create"
+                        class="px-4 py-2 text-white bg-green-500 rounded">Submit <i wire:loading="create"
                             class="fa fa-spinner fa-spin"></i></button>
                 </div>
             </form>

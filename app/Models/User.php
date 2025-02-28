@@ -27,6 +27,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+
     ];
 
     /**
@@ -62,17 +63,20 @@ class User extends Authenticatable
 
 
 
-    public function Module(){
+    public function Module()
+    {
         return $this->belongsToMany(Module::class, 'user_id');
     }
-    public function Topic(){
+    public function Topic()
+    {
         return $this->belongsToMany(Topic::class, 'user_id');
     }
-    public function groups(){
-       return $this->belongsToMany(Group::class, 'user_groups')->withPivot('user_id', 'group_id');;
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'user_groups')->withPivot('user_id', 'group_id');;
     }
-    public function test(){
+    public function test()
+    {
         return $this->hasMany(Test::class);
     }
-
 }

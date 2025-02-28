@@ -1,5 +1,5 @@
   <!--Module Table Start -->
-  <div wire:poll.alive class="col-span-full xl:col-span-8 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
+  <div class="col-span-full xl:col-span-8 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
 
       <header class="flex justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
           <h2 class="font-semibold text-gray-800 dark:text-gray-100">Test List</h2>
@@ -7,15 +7,13 @@
           <div class="flex justify-between">
               @livewire('exams.test-modal')
               @livewire('exams.question-assignment-modal')
-              <!-- end-->
-              <input type="text" wire:model.live="search" placeholder="search here"
-                  class="ml-5 mt-1 block w-1/10 border border-gray-300 rounded-md p-2 mr-0">
+
           </div>
       </header>
       <div class="p-3">
           <!-- Table -->
           <div class="overflow-x-auto">
-              <table class="table-auto w-full dark:text-gray-300">
+              <table id="test_table" class="table-auto w-full dark:text-gray-300">
                   <!-- Table header -->
                   <thead
                       class="text-xs uppercase text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50 rounded-sm">
@@ -90,8 +88,6 @@
                       </h3>
                   @endif
               </table>
-              {{ $this->tests->links('vendor.livewire.tailwind') }}
           </div>
       </div>
   </div>
-  <!-- Module Table End-->

@@ -22,7 +22,10 @@ use App\Http\Controllers\TopicController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\UsersController;
 use App\Livewire\Admin\AdminDashboard;
+use App\Livewire\BackupRestore;
 use App\Livewire\Examinee\Dashboard;
+use App\Livewire\Examinee\MyTest;
+use App\Livewire\Examinee\StartExam;
 use App\Livewire\Examiner\ExaminerDashboard;
 use App\Livewire\Exams\QuestionAssignment;
 use App\Livewire\Exams\TestExecution;
@@ -34,6 +37,7 @@ use App\Livewire\QuestionBank\ModuleList;
 use App\Livewire\QuestionBank\QuestionList;
 use App\Livewire\QuestionBank\TopicList;
 use App\Livewire\Users\UserList;
+use App\Models\Test;
 use NunoMaduro\Collision\Exceptions\TestException;
 
 /*
@@ -46,8 +50,6 @@ use NunoMaduro\Collision\Exceptions\TestException;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-
 
 // Redirect '/' to 'login'
 Route::redirect('/', 'login');
@@ -69,7 +71,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::group(['prefix' => 'QuestionBank', 'middleware' => ['role:10,5']], function () {
         Route::get('module/view', ModuleList::class)
             ->name('QuestionBank.module.view');
-            Route::get('module/create', ModuleList::class)
+        Route::get('module/create', ModuleList::class)
             ->name('QuestionBank.module.create');
 
         Route::get('topic/view', TopicList::class)
@@ -82,21 +84,30 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     // User Management Routes
     Route::group(['prefix' => 'users'], function () {
-        Route::get('view', UserList::class)
+        Route::get('view_user', UserList::class)
             ->name('users.view');
-    });
 
-    // // Group Management Routes
-    Route::group(['prefix' => 'groups'], function () {
-        Route::get('view', GroupList::class)
+        Route::get('view_group', GroupList::class)
             ->name('groups.view');
     });
 
+    Route::group(['prefix' => 'settings'], function () {
+        Route::get('backup_restore/view', BackupRestore::class)
+            ->name('backup_restore.view');
+    });
     // Exam Routes
-    Route::group(['prefix' => 'exams'], function () {
+    Route::group(['prefix' => 'exams', 'middleware' => ['role:10,5']], function () {
         Route::get('view_test', TestList::class)
             ->name('exams.view_test');
         Route::get('view_question_assignment', QuestionAssignment::class)->name('exams.view_question_assignment');
-        Route::get('view_test_execution', TestExecution::class);
+        //Route::get('view_test_execution', TestExecution::class);
     });
+    Route::group(['prefix' => 'MyExam', 'middleware' => ['role:10,5,1']], function () {
+        Route::get('myexam_list', MyTest::class)
+            ->name('myexam_list');
+        Route::get('start_exam', MyTest::class)
+            ->name('start_exam');
+    });
+
+    Route::get('/mytest-list', StartExam::class)->name('mytest.list');
 });

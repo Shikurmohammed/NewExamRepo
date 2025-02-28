@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Module extends Model
 {
     //
-    public function User(){
+    protected $fillable = ['name', 'enabled', 'user_id'];
+    public function User()
+    {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
-    public function topics(){
+    public function topics()
+    {
         return $this->hasMany(Topic::class, 'module_id', 'id');
     }
-    protected $guarded =[];
+    protected $guarded = [];
 }

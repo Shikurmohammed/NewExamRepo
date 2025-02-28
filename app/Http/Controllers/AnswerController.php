@@ -52,7 +52,7 @@ class AnswerController extends Controller
         $answer->enabled = $request->enabled;
         $answer->keyboard_key = $request->keyboard_key;
         //check answer's unquness
-        $uniquesAnswer = Answer::where('description', $request->description)->count();
+        $uniquesAnswer = Answer::where('description', $request->description)->count();//May be we can filter using topic_id and description
 
         if ($uniquesAnswer  < 1) {
             $position = $request->position ?: 0;
