@@ -19,6 +19,7 @@ final class TopicTable extends PowerGridComponent
 {
     public string $tableName = 'topics'; //'topic-table-x6udtw-table';
     public bool $showFilters = true;
+    public array $name = [];
     public function setUp(): array
     {
         $this->showCheckBox();
@@ -37,9 +38,10 @@ final class TopicTable extends PowerGridComponent
         ];
     }
 
-    public function datasource(): Builder
+    public function datasource() //: Builder
     {
-        return Topic::query();
+        return Topic::with('module')->get();
+        //return Topic::query();
     }
 
     public function relationSearch(): array
@@ -51,7 +53,9 @@ final class TopicTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('module_id')
+            ->add('module_name', function (Topic $topic) {
+                return $topic->module->name;
+            })
             ->add('name')
             ->add('description')
             ->add('created_at');
@@ -61,11 +65,11 @@ final class TopicTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Module id', 'module_id'),
+            Column::make('Module', 'module_name')->sortable()
+                ->searchable(),
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
-
             Column::make('Description', 'description')
                 ->sortable()
                 ->searchable()->editOnClick(
@@ -73,9 +77,6 @@ final class TopicTable extends PowerGridComponent
                     fallback: '- empty -',
                     saveOnMouseOut: true,
                 ),
-
-
-
             Column::make('Created at', 'created_at')
                 ->sortable()
                 ->searchable(),
@@ -106,23 +107,40 @@ final class TopicTable extends PowerGridComponent
     public function actions(Topic $row): array
     {
         return [
-            Button::add('edit')
-                ->slot('Edit: ' . $row->id)
+            Button::add('view')
                 ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id])
+                ->slot(' &#128065; view')
+                ->class('
+               flex gap-2 hover:text-slate-700 hover:bg-slate-100
+                 font-bold p-1 px-2 rounded dark:ring-pg-primary-600 text-blue-300
+                  ')
+                ->openModal('modals.details-modals.topic-details-modal', ['topicId' => $row->id]),
+            Button::add('edit')
+                ->slot('&#9889; Edit')
+                ->id()
+                ->class('flex gap-2 hover:text-slate-700 hover:bg-slate-100
+                 font-bold p-1 px-2 rounded dark:ring-pg-primary-600
+                  dark:border-pg-primary-600 dark:hover:bg-pg-primary-700
+                  dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+                ->openModal('modals.edit-modals.edit-topic-modal', ['topicId' => $row->id]),
+
+
+            Button::add('delete')
+                ->slot('   &#128465; Delete')
+                ->class('flex gap-2 hover:text-slate-700
+                 hover:bg-slate-100 font-bold p-1 px-2 rounded text-red-300')
+                ->openModal('modals.delete-modals.delete-topic-modal', ['topicId' => $row->id]),
         ];
     }
+    public array $rules = [
+        'name.*' => ['required', 'string', 'unique:topics,name'],
+    ];
+    //Inline Update
+    public function onUpdatedEditable(string|int $id, string $field, string $value): void
+    {
+        //Validate before update
+        $this->validate();
 
-
-    // public function actionRules($row): array
-    // {
-    //     //var_dump('s');
-    //     return [
-    //         // Hide button edit for ID 1
-    //         Rule::button('edit')
-    //             ->when(fn($row) => $row->id === 1)
-    //             ->hide(),
-    //     ];
-    // }
+        Topic::find($id)->update([$field => $value]);
+    }
 }

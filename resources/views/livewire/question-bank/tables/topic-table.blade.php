@@ -1,30 +1,8 @@
 <div class="bg-white shadow-sm col-span-full xl:col-span-8 dark:bg-gray-800 rounded-xl">
-
     <header class="flex justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
-
         <h2 class="font-semibold text-gray-800 dark:text-gray-100">Topic List</h2>
         <div class="flex justify-between">
-
-            <div class="flex items-center justify-between">
-                <form wire:submit.prevent="importTopics" class="flex items-center justify-between ">
-                    <input type="file" wire:model="file" required class="max-w:10" />
-                    <buttonwire:loading.attr="disabled" wire:loading.class="bg-gray-500"
-                    class="px-2 py-1 mt-2 mr-2 text-white rounded bg-slate-400">
-                    <i class="fa fa-upload"></i>
-                    Upload<i wire:loading="importTopics" class="fa fa-spinner fa-spin"></i></buttonwire:loading.attr=>
-
-
-                    @error('file')
-                        <span class="text-red-600">{{ $message }}</span>
-                    @enderror
-                </form>
-
-
-            </div>
             @livewire('modals.topic-modal')
-            <!-- end-->
-            {{-- <input type="text" wire:model.live="search" placeholder="search here"
-                class="block p-2 mt-1 ml-5 mr-0 border border-gray-300 rounded-md w-1/10"> --}}
         </div>
     </header>
     <livewire:topic-table />
@@ -105,11 +83,5 @@
             </table>
         </div>
     </div> --}}
-</div>
-@script()
-<script>
-    document.addEventListener('livewire:initialized', () => {
 
-    });
-</script>
-@endscript()
+</div>

@@ -37,14 +37,14 @@ class TopicList extends Component
              Before deleting a topic first we must check if it is referenced in other tables, for example test_topics
             */
 
-            $isTopicUsed = DB::table('test_topics')->where('test_topic_set_id',$id)->count();
+            $isTopicUsed = DB::table('test_topics')->where('test_topic_set_id', $id)->count();
             if ($isTopicUsed > 0) {
                 $sql1 = "UPDATE topics set enabled =0 where id =$id";
                 DB::query($sql1);
                 noty()
                     ->livewire()
                     ->addWarning("The topic with ID::" . $id . " is currntly in use! ");
-                    return;
+                return;
             } else {
                 $topic = Topic::find($id);
                 if ($topic) {
@@ -61,5 +61,4 @@ class TopicList extends Component
                 ->addError('Operation failed!' . $ex);
         }
     }
-
 }

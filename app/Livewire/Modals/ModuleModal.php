@@ -58,14 +58,30 @@ class ModuleModal extends Modal
     {
 
         //dd($this->file);
-        $this->validate([
-            'file' => 'required|mimes:csv,xlsx,xls |max:2048',
-        ], [
-            'file.required' => 'Please upload a file.',
-            'file.mimes' => 'The file must be a CSV, XLSX, or XLS file.',
-        ]);
-        $path = $this->file->store('modules');
+
         try {
+            $this->validate([
+                'file' => 'required|mimes:csv,xlsx,xls |max:2048',
+            ], [
+                'file.required' => 'Please upload a file.',
+                'file.mimes' => 'The file must be a CSV, XLSX, or XLS file.',
+            ]);
+
+
+            $reader = Excel::toArray(new ModulesImport, $this->file);
+            $headers = array_keys($reader[0][0]); // Get the headers from the first row
+
+            // Validate the headers
+            $requiredHeaders = ['name', 'enabled', 'created_by']; //ser_id
+            $missingHeaders = array_diff($requiredHeaders, $headers);
+            // dd($headers);
+            if (!empty($missingHeaders)) {
+                noty()->livewire()
+                    ->addError("The uploaded file is missing the following required columns: "
+                        . implode(",", $missingHeaders));
+                return;
+            }
+            $path = $this->file->store('modules');
             Excel::import(new ModulesImport, $path);
             $this->file = null;
         } catch (\Throwable $th) {

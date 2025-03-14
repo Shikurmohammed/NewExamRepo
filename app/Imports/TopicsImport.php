@@ -15,7 +15,7 @@ class TopicsImport  implements ToModel, WithHeadingRow
 {
     public function headingRow(): int
     {
-        return 2; // Use the second row as headers
+        return 1; // Use the second row as headers
     }
     public function model(array $row)
     {
@@ -46,6 +46,9 @@ class TopicsImport  implements ToModel, WithHeadingRow
         } catch (\Throwable $th) {
             noty()->livewire()->addError($th->getMessage());
             Log::error('Error processing row: ' . json_encode($row), ['error' => $th->getMessage()]);
+            noty()
+                ->livewire()
+                ->addError('Import Failed!' . $th->getMessage());
         }
     }
 

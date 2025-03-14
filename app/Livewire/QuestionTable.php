@@ -24,7 +24,6 @@ final class QuestionTable extends PowerGridComponent
     public function setUp(): array
     {
         $this->showCheckBox();
-
         return [
             PowerGrid::header()
                 ->showSearchInput()
@@ -40,9 +39,9 @@ final class QuestionTable extends PowerGridComponent
         ];
     }
 
-    public function datasource(): Builder
+    public function datasource() //: Builder
     {
-        return Question::query();
+        return Question::with('topic')->get();
     }
 
     public function relationSearch(): array
@@ -54,7 +53,10 @@ final class QuestionTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('topic_id')
+            ->add('topic_name', function (Question $question) {
+                // Check if the topic exists and has a name
+                return $question->topic && $question->topic->name ? $question->topic->name : 'No Topic Name';
+            })
             ->add('description')
             ->add('explanation')
             ->add('enabled')
@@ -72,9 +74,11 @@ final class QuestionTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
-            Column::make('Topic id', 'topic_id'),
-            Column::make('Description', 'description')
+            Column::action('Action'),
+            Column::make('Id', 'id')->hidden(),
+            Column::make('Topic id', 'topic_name')->sortable()
+                ->searchable(),
+            Column::make('Description', 'description')->sortable()
                 ->sortable()
                 ->searchable(),
 
@@ -106,14 +110,14 @@ final class QuestionTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->sortable(),
-
             Column::make('Created at', 'created_at')
                 ->sortable()
                 ->searchable(),
+            Column::make('updated at', 'updated_at')
+                ->sortable()
+                ->searchable(),
 
-            Column::action('Action')
+
         ];
     }
 
@@ -131,23 +135,29 @@ final class QuestionTable extends PowerGridComponent
     public function actions(Question $row): array
     {
         return [
-            Button::add('edit')
-                ->slot('&#9889; Edit: ' . $row->id)
+            Button::add('view')
                 ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('edit', ['rowId' => $row->id])
-        ];
-    }
+                ->slot(' &#128065; view')
+                ->class('
+               flex gap-2 hover:text-slate-700 hover:bg-slate-100
+                 font-bold p-1 px-2 rounded dark:ring-pg-primary-600 text-blue-300
+                  ')
+                ->openModal('modals.details-modals.question-details-modal', ['questionId' => $row->id]),
+            Button::add('edit')
+                ->slot('&#9889; Edit')
+                ->id()
+                ->class('flex gap-2 hover:text-slate-700 hover:bg-slate-100
+                 font-bold p-1 px-2 rounded dark:ring-pg-primary-600
+                  dark:border-pg-primary-600 dark:hover:bg-pg-primary-700
+                  dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+                ->openModal('modals.edit-modals.edit-question-modal', ['questionId' => $row->id]),
 
-    /*
-    public function actionRules($row): array
-    {
-       return [
-            // Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($row) => $row->id === 1)
-                ->hide(),
+
+            Button::add('delete')
+                ->slot('   &#128465; Delete')
+                ->class('flex gap-2 hover:text-slate-700
+                 hover:bg-slate-100 font-bold p-1 px-2 rounded text-red-300')
+                ->openModal('modals.delete-modals.delete-question-modal', ['questionId' => $row->id]),
         ];
     }
-    */
 }

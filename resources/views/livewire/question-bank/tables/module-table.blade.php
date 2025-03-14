@@ -1,17 +1,11 @@
 <div class="bg-white shadow-sm col-span-full xl:col-span-8 dark:bg-gray-800 rounded-xl">
-
     <header class="flex justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
         <h2 class="font-semibold text-gray-800 dark:text-gray-100">Module List</h2>
-
         <div class="flex justify-between">
-
             @livewire('modals.module-modal')
-            <!-- end-->
-            {{-- <input type="text" wire:model.live="search" placeholder="search here"
-                  class="block p-2 mt-1 ml-5 mr-0 border border-gray-300 rounded-md w-1/10"> --}}
         </div>
     </header>
-    <div class="p-3">
+    <div class="p-3 ">
         <livewire:module-table>
             <div class="overflow-x-auto">
                 {{-- <table id="module_table" class="w-full table-auto dark:text-gray-300">

@@ -58,7 +58,7 @@ class TopicModal extends Modal
             }
         } catch (\Exception $ex) {
             noty()->livewire()
-                ->addError('error', $ex->getMessage());
+                ->addError('error' . $ex->getMessage());
         }
     }
     //Edit topic
@@ -79,16 +79,18 @@ class TopicModal extends Modal
     public function importTopics()
     {
 
+
         $this->validate([
             'file' => 'required|mimes:csv,xlsx,xls |max:2048',
         ], [
             'file.required' => 'Please upload a file.',
             'file.mimes' => 'The file must be a CSV, XLSX, or XLS file.',
         ]);
-        $path = $this->file->store('questions');
+        $path = $this->file->store('topics');
         try {
+            // dd($this->file);
             // Excel::import(new QuestionImport, $this->file);
-            $data = Excel::import(new TopicsImport, $path);
+            Excel::import(new TopicsImport, $path);
             $this->file = null;
         } catch (\Exception $e) {
             noty()

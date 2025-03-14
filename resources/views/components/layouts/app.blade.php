@@ -10,8 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap" rel="stylesheet" />
     <script src="{{ asset('js/datatable/js/jquery-3.7.0.js') }}"></script>
+    <link href="{{ asset('vendor/powergird/css/base.css') }}" rel="stylesheet" />
+    <link href="{{ asset('vendor/powergird/css/tailwind.css') }}" rel="stylesheet" />
+    <link href="{{ asset('vendor/wire-elements/css/modal.css') }}" rel="stylesheet" />
+    <link href="{{ asset('vendor/select2/css/select2.min.css') }}" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="{{ asset('vendor/flasher/flasher.min.js') }}"></script>
     @livewireStyles
     <script>
         if (localStorage.getItem('dark-mode') === 'false' || !('dark-mode' in localStorage)) {
@@ -45,6 +48,10 @@
     </div>
     @livewireScriptConfig
     @livewireScripts
+    @livewire('livewire-ui-modal')
+    @powerGridStyles
+    <script src="{{ asset('vendor/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('vendor/wire-elements/js/modal.js') }}"></script>
     <script src="{{ asset('vendor/powergird/js/powergrid.js') }}"></script>
     <script>
         Livewire.start();
