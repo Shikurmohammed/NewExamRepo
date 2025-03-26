@@ -9,11 +9,14 @@ class Group extends Model
     //
     protected $table = 'groups';
     public $timestamps = false;
+    protected $fillable = ['name'];
 
-    public function users(){
+    public function users()
+    {
         return $this->belongsToMany(User::class, 'user_groups')->withPivot('user_id', 'group_id');;
     }
-    public function tests(){
-        return $this->belongsTo(Test::class, 'test_groups')->withPivot('test_id','group_id');
+    public function tests()
+    {
+        return $this->belongsTo(Test::class, 'test_groups')->withPivot('test_id', 'group_id');
     }
 }

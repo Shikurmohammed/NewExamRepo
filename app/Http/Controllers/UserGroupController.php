@@ -118,7 +118,7 @@ class UserGroupController extends Controller
 
     public function moveToGroup()
     {
-        //To be done...
+        //To be implemented...
     }
     //Check if each selected user_id exists in the users table, to ensure data integrity!
     public function checkUserExistanceInDbTable($userIdsFromForm, $userIdsFromTable)

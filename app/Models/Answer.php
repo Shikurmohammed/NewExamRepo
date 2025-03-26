@@ -19,7 +19,7 @@ class Answer extends Model
         'created_at',
         'updated_at'
     ];
-    public function Question()
+    public function question()
     {
         return $this->belongsTo(Question::class);
     }

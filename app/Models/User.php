@@ -24,9 +24,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'username',
         'email',
         'password',
+        'access_level',
+        'status'
 
     ];
 
@@ -62,7 +67,7 @@ class User extends Authenticatable
 
 
 
-
+    //Mapping
     public function Module()
     {
         return $this->belongsToMany(Module::class, 'user_id');
@@ -73,7 +78,8 @@ class User extends Authenticatable
     }
     public function groups()
     {
-        return $this->belongsToMany(Group::class, 'user_groups')->withPivot('user_id', 'group_id');;
+        return $this->belongsToMany(Group::class, 'user_groups')
+            ->withPivot('user_id', 'group_id');
     }
     public function test()
     {

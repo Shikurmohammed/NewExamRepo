@@ -14,7 +14,9 @@
     <link href="{{ asset('vendor/powergird/css/tailwind.css') }}" rel="stylesheet" />
     <link href="{{ asset('vendor/wire-elements/css/modal.css') }}" rel="stylesheet" />
     <link href="{{ asset('vendor/select2/css/select2.min.css') }}" rel="stylesheet" />
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     @livewireStyles
     <script>
         if (localStorage.getItem('dark-mode') === 'false' || !('dark-mode' in localStorage)) {
@@ -25,6 +27,12 @@
             document.querySelector('html').style.colorScheme = 'dark';
         }
     </script>
+    <style>
+        .modal-enter-active,
+        .modal-leave-active {
+            transition: opacity 0.1s ease-in-out !important;
+        }
+    </style>
 </head>
 
 <body class="antialiased text-gray-600 bg-gray-100 font-inter dark:bg-gray-900 dark:text-gray-400"
@@ -49,10 +57,12 @@
     @livewireScriptConfig
     @livewireScripts
     @livewire('livewire-ui-modal')
-    @powerGridStyles
+    {{-- @powerGridStyles --}}
     <script src="{{ asset('vendor/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('vendor/wire-elements/js/modal.js') }}"></script>
     <script src="{{ asset('vendor/powergird/js/powergrid.js') }}"></script>
+    <script src="{{ asset('vendor/flasher/flasher.min.js') }}"></script>
+
     <script>
         Livewire.start();
     </script>

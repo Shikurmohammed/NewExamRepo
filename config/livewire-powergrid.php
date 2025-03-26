@@ -24,7 +24,7 @@ return [
         ],
 
         'allowed' => [
-            // 'pencil',
+            //'pencil',
         ],
 
         'attributes' => ['class' => 'w-5 text-red-600'],
@@ -141,4 +141,5 @@ return [
     'auto_discover_models_paths' => [
         app_path('Models'),
     ],
+
 ];

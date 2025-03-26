@@ -4053,16 +4053,16 @@
         },
         {
             "name": "power-components/livewire-powergrid",
-            "version": "v6.1.15",
+            "version": "v6.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Power-Components/livewire-powergrid.git",
-                "reference": "2e415512e1ac14ce08443268874c565093384cc4"
+                "reference": "673b5862a8a7fcbcc65814587c3f6358029e5cca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/2e415512e1ac14ce08443268874c565093384cc4",
-                "reference": "2e415512e1ac14ce08443268874c565093384cc4",
+                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/673b5862a8a7fcbcc65814587c3f6358029e5cca",
+                "reference": "673b5862a8a7fcbcc65814587c3f6358029e5cca",
                 "shasum": ""
             },
             "require": {
@@ -4119,7 +4119,7 @@
             "homepage": "https://github.com/power-components/livewire-powergrid",
             "support": {
                 "issues": "https://github.com/Power-Components/livewire-powergrid/issues",
-                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.1.15"
+                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.1.16"
             },
             "funding": [
                 {
@@ -4127,7 +4127,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-24T13:04:20+00:00"
+            "time": "2025-03-08T18:45:06+00:00"
         },
         {
             "name": "pragmarx/google2fa",

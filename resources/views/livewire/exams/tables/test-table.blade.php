@@ -1,22 +1,22 @@
-  <!--Module Table Start -->
-  <div class="col-span-full xl:col-span-8 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
+<div class="bg-white shadow-sm col-span-full md:col-span-10 lg:col-span-9 xl:col-span-8 dark:bg-gray-800 rounded-xl">
+    <header
+        class="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
+        <h2 class="font-semibold text-gray-800 dark:text-gray-100">Test List</h2>
+        <div class="flex flex-wrap items-center gap-2">
+            @livewire('exams.test-modal')
+            @livewire('exams.question-assignment-modal')
+        </div>
+    </header>
+    <div class="p-3 overflow-x-auto">
+        <livewire:test-table />
+    </div>
+</div>
 
-      <header class="flex justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
-          <h2 class="font-semibold text-gray-800 dark:text-gray-100">Test List</h2>
-
-          <div class="flex justify-between">
-              @livewire('exams.test-modal')
-              @livewire('exams.question-assignment-modal')
-
-          </div>
-      </header>
-      <div class="p-3">
-          <!-- Table -->
-          <div class="overflow-x-auto">
-              <table id="test_table" class="table-auto w-full dark:text-gray-300">
+{{-- <div class="overflow-x-auto">
+              <table id="test_table" class="w-full table-auto dark:text-gray-300">
                   <!-- Table header -->
                   <thead
-                      class="text-xs uppercase text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50 rounded-sm">
+                      class="text-xs text-gray-400 uppercase rounded-sm dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
                       <tr>
                           <th class="p-2">
                               <div class="font-semibold text-left">#</div>
@@ -88,6 +88,4 @@
                       </h3>
                   @endif
               </table>
-          </div>
-      </div>
-  </div>
+          </div> --}}

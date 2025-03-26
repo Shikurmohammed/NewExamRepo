@@ -1,59 +1,70 @@
-<div x-data="{ isOpen: @entangle('isModalOpen') }">
-    <button @click="isOpen = true" class="mt-2 bg-slate-400 text-white px-2 py-1 rounded">
+<div x-data="{ isOpen: @entangle('isModalOpen') }" id="assign_question_modal" class="relative">
+    <button @click="isOpen = true" class="px-2 py-1 mt-2 text-white rounded bg-slate-400">
         <i class="fa fa-plus-circle"></i> Assign Question
     </button>
-    <div x-show="isOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 w-full h-full"
-        @click.away="if (! $event.target.closest('.modal-content')) isOpen = false" style="display: none;">
-        <div class="modal-content bg-white rounded-lg shadow-lg p-6 ml-10 max-w-4xl w-full"
+    <div x-show="isOpen" class="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50"
+        @click.away="if (!event.target.closest('.select2-container')) { isOpen = false }" isOpen=false"
+        style="display: none;">
+        <div class="w-full max-w-4xl p-6 mx-4 bg-white rounded-lg shadow-lg modal-content"
             x-show.transition.opacity="isOpen">
-            <h2 class="text-xl font-semibold mb-4">Assign Question to Test</h2>
-            <form wire:submit.prevent="assignQuestion" class="w-full max-w-4xl h-full">
-                <!-- Select fields -->
-                <div class="flex flex-wrap -mx-3 mb-6">
-                    <div class="w-full md:w-1/3 px-3 mb-6" wire:ignore>
+            <h2 class="mb-4 text-xl font-semibold">Assign Question to Test</h2>
+            <form wire:submit.prevent="assignQuestion" class="w-full">
+                <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-3 lg:grid-cols-3">
+                    <div wire:ignore>
                         <label for="question_type"
-                            class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Type</label>
-                        <select @click.prevent id="question_type" wire:model="selectedQuestionType"
-                            class="select2 mt-1 block w-full border-gray-300 rounded-md p-2">
+                            class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase">Type</label>
+                        <select id="question_type" wire:model="selectedQuestionType"
+                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
                             <option value="">Select Type</option>
                             @foreach ($question_type as $type)
                                 <option value="{{ $type['id'] }}">{{ $type['name'] }}</option>
                             @endforeach
                         </select>
                         @error('selectedQuestionType')
-                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            <p class="text-xs italic text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                        <label class="block text-sm font-medium text-gray-700">Test</label>
-                        <select wire:model="test_id" id="test"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
-                            @foreach ($this->tests as $test)
-                                <option value="{{ $test->id }}">{{ $test->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="w-full md:w-1/3 px-3 mb-6 md:mb-2 max-lg:2xl" wire:ignore>
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                            for="difficulty_level">
-                            Difficulty
-                        </label>
+
+                    <div wire:ignore>
+                        <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
+                            for="difficulty_level">Difficulty</label>
                         <select id="difficulty_level" wire:model="selectedDifficultyLevel"
-                            class="select2 mt-1 block w-full border border-gray-300 rounded-md p-2">
+                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
                             <option value="">Select Difficulty</option>
                             @foreach ($difficulty_level as $difficulty)
-                                <option value="{{ $difficulty['id'] }}"> {{ $difficulty['name'] }}</option>
+                                <option value="{{ $difficulty['id'] }}">{{ $difficulty['name'] }}</option>
                             @endforeach
                         </select>
                         @error('difficulty_level')
-                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            <p class="text-xs italic text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">No of answers</label>
+                        <input type="number" wire:model="answer_count"
+                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md md:w-1/2">
+                        @error('answer_count')
+                            <span class="text-xs italic text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
-
-                <div class="flex flex-wrap -mx-3 mb-6">
-                    <div class="w-full md:w-1/3 px-3 mb-6 md:mb-2 max-lg:2xl">
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2 lg:grid-cols-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Test</label>
+                        <div wire:ignore>
+                            <select wire:model="test_id" id="test"
+                                class="block w-full p-2 mt-1 border border-gray-300 rounded-md" required>
+                                @foreach ($this->tests as $test)
+                                    <option value="{{ $test->id }}">{{ $test->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('test_id')
+                            <p class="text-xs italic text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div wire:ignore>
+                        <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
                             for="topic_id">
                             Topic <i>
                                 @if ($this->question_count)
@@ -62,58 +73,111 @@
                             </i>
                         </label>
                         <select id="topic_id" wire:model.live="topic_ids" multiple
-                            class="select2 mt-1 block w-full border border-gray-300 rounded-md p-2">
+                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
                             <option value="">Select Topic</option>
                             @foreach ($this->moduleWithTopics as $module)
-                                {{-- <optgroup label="{{ $module->name }}" class="font-bold"> --}}
-                                <option value="#{{ $module->id }}" class="font-bold">{{ $module->name }}
-                                </option>
+                                <option value="#{{ $module->id }}" class="font-bold">{{ $module->name }}</option>
                                 @foreach ($module->topics as $topic)
-                                    <option value="{{ $topic->id }}" class="ml-8">
-                                        {{ $topic->name }}
-                                    </option>
+                                    <option value="{{ $topic->id }}" class="ml-8">{{ $topic->name }}</option>
                                 @endforeach
-                                {{-- </optgroup> --}}
                             @endforeach
                         </select>
                         @error('topic_ids')
-                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-2 max-lg:2xl" wire:ignore>
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                            for="question_id">
-                            Question
-                        </label>
-                        <select id="question_id" wire:model="question_ids" multiple
-                            class="select2 mt-1 block w-full border border-gray-300 rounded-md p-2">
-                            <option value="">Select questions</option>
-                            @foreach ($this->questions as $question)
-                                <option value="{{ $question['id'] }}" selected> {{ $question['description'] }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('question_id')
-                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="w-full md:w-1/6 px-3 mb-6 md:mb-0">
-                        <label class="block text-sm font-medium text-gray-700">No of answers</label>
-                        <input type="number" wire:model="answer_count"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2">
-                        @error('answer_count')
-                            <span class="px-2 w-full text-red-700">{{ $message }}</span>
+                            <p class="text-xs italic text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
-                <div class="flex justify-end w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                    <div class="items-center">
-                        <button type="button" wire:click="closeModal" @click="isOpen = false"
-                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancel</button>
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+
+                <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-1 lg:grid-cols-1">
+                    <div wire:ignore>
+                        <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
+                            for="question_id">Question</label>
+                        <select id="question_id" wire:model="question_ids" multiple
+                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
+                            <option value="">Select questions</option>
+                            @foreach ($this->questions as $question)
+                                <option value="{{ $question['id'] }}" selected>{{ $question['description'] }}</option>
+                            @endforeach
+                        </select>
+                        @error('question_id')
+                            <p class="text-xs italic text-red-500">{{ $message }}</p>
+                        @enderror
                     </div>
+
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" wire:click="closeModal" @click="isOpen = false"
+                        class="px-4 py-2 text-gray-700 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">Submit</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+@script()
+<script>
+    $(document).ready(function() {
+        initializeSelect2();
+    });
+    document.addEventListener('livewire:initialize', function() {
+        initializeSelect2();
+    });
+
+    function initializeSelect2() {
+        $('#question_type').select2({
+            dropdownParent: $('#assign_question_modal'), // Ensure dropdown is attached to the modal
+            width: '100%',
+            placeholder: "Select question type",
+            allowClear: true
+        }).on('change', function(e) {
+            var data = $(this).val();
+            console.log(data);
+            @this.set('selectedQuestionType', data);
+        });
+        $('#test').select2({
+            dropdownParent: $('#assign_question_modal'), // Ensure dropdown is attached to the modal
+            width: '100%',
+            placeholder: "Select test",
+            allowClear: true
+        }).on('change', function(e) {
+            var data = $(this).val();
+            console.log(data);
+            @this.set('test_id', data);
+        });
+
+        $('#difficulty_level').select2({
+            dropdownParent: $('#assign_question_modal'), // Ensure dropdown is attached to the modal
+            width: '100%',
+            placeholder: "Select difficulty",
+            allowClear: true
+        }).on('change', function(e) {
+            var data = $(this).val();
+            console.log(data);
+            @this.set('selectedDifficultyLevel', data);
+        });
+        $('#topic_id').select2({
+            dropdownParent: $('#assign_question_modal'), // Ensure dropdown is attached to the modal
+            width: '100%',
+            placeholder: "Select topic",
+            allowClear: true
+        }).on('change', function(e) {
+            var data = $(this).val();
+            console.log(data);
+            @this.set('topic_ids', data);
+        });
+        $('#question_id').select2({
+            dropdownParent: $('#assign_question_modal'), // Ensure dropdown is attached to the modal
+            width: '100%',
+            placeholder: "Select question",
+            allowClear: true
+        }).on('change', function(e) {
+            var data = $(this).val();
+            console.log(data);
+            @this.set('question_ids', data);
+        });
+
+
+    }
+</script>
+@endscript()

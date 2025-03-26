@@ -99,6 +99,7 @@ class AnswerModal extends Modal
                 $sql_update_position = "UPDATE answers set position = position + 1 where question_id = :question_id AND position >= :position";
                 DB::update($sql_update_position, ['question_id' => $question_id, 'position' => $position]);
                 $answer->save();
+                $this->dispatch('refreshAnswerTable');
             });
 
             noty()

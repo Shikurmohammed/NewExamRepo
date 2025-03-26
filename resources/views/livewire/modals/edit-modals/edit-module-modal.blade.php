@@ -1,10 +1,7 @@
 <div>
-
     <div class="p-4 bg-blue-600 rounded-t-lg">
         <h2 class="text-lg font-semibold text-white">Edit Module</h2>
     </div>
-
-
     <div class="p-6">
         <form wire:submit.prevent="save">
 

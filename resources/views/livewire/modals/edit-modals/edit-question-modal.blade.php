@@ -7,54 +7,67 @@
     <div class="p-6">
         <form wire:submit.prevent="save">
             <div class="flex flex-wrap mb-6 -mx-3">
-                <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0 max-lg:2xl" wire:ignore>
-                    <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="edit_topic_id">
+                <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0 max-lg:2xl">
+                    <label class="block mb-4 text-xs font-bold tracking-wide text-gray-700 uppercase" for="edit_topic_id">
                         Topic
                     </label>
-                    <select id="edit_topic_id" wire:model.live="topic_id"
-                        class="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border rounded appearance-none select2 focus:outline-none focus:bg-white">
-                        <option value="" disabled>Select Topic</option>
-                        @foreach ($this->topics as $topic)
-                            <option value="{{ $topic['id'] }}"> {{ $topic['name'] }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative" wire:ignore>
+                        <select id="edit_topic_id" wire:model.live="topic_id"
+                            class="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border rounded appearance-none select2 focus:outline-none focus:bg-white">
+                            <option value="" disabled>Select Topic</option>
+                            @foreach ($this->topics as $topic)
+                                <option value="{{ $topic['id'] }}"> {{ $topic['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     @error('topic_id')
                         <p class="text-xs italic text-red-500">{{ $message }}</p>
                     @enderror
+
                 </div>
-                <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0 max-lg:2xl" wire:ignore>
+                <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0 max-lg:2xl">
                     <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="type">
                         Question Type
                     </label>
-                    <select wire:model="type" id="edit_question_type"
-                        class="block w-full px-4 py-3 pr-8 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500">
+                    <div class="relative" wire:ignore>
+                        <select wire:model="type" id="edit_question_type"
+                            class="block w-full px-4 py-3 pr-8 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500">
 
-                        <option value="" disabled>Select Type</option>
-                        <option value="1">Single answer</option>
-                        <option value="2">Multiple answers</option>
-                        <option value="3">Free answer</option>
-                        <option value="4">Ordering answers</option>
-                    </select>
+                            <option value="" disabled>Select Type</option>
+                            <option value="1">Single answer</option>
+                            <option value="2">Multiple answers</option>
+                            <option value="3">Free answer</option>
+                            <option value="4">Ordering answers</option>
+                        </select>
+                    </div>
+                    @error('type')
+                        <p class="text-xs italic text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0 max-lg:2xl" wire:ignore>
+                <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0 max-lg:2xl">
                     <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="difficulty">
                         Difficulty
                     </label>
-                    <select wire:model="difficulty" id="edit_difficulty"
-                        class="block w-full px-4 py-3 pr-8 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500"
-                        id="difficulty">
-                        <option value="" disabled>Select Difficulty</option>
-                        <option value="1">Easy</option>
-                        <option value="2">Medium</option>
-                        <option value="3">Hard</option>
-                    </select>
+                    <div class="relative" wire:ignore>
+                        <select wire:model="difficulty" id="edit_difficulty"
+                            class="block w-full px-4 py-3 pr-8 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500"
+                            id="difficulty">
+                            <option value="" disabled>Select Difficulty</option>
+                            <option value="1">Easy</option>
+                            <option value="2">Medium</option>
+                            <option value="3">Hard</option>
+                        </select>
+                    </div>
+                    @error('difficulty')
+                        <p class="text-xs italic text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="w-full px-3 mb-6 md:w-1/3 md:mb-0 ">
                     <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="position">
                         Position
                     </label>
                     <div class="relative">
-                        <select wire:model="position"
+                        <select wire:model="position" id="edit_position"
                             class="block w-full px-4 py-3 pr-8 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500"
                             id="position">
                             <option value="">Select Position</option>
@@ -65,17 +78,17 @@
                     </div>
 
                 </div>
-                <div class="w-full px-3 mb-6 md:w-1/3 md:mb-0 ">
+                <div class="w-full px-3 mb-6 md:w-1/6 md:mb-0 ">
                     <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="timer">
                         Timer
                     </label>
                     <div class="relative">
                         <input wire:model="timer"
-                            class="block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500"
+                            class="block w-full px-4 py-1 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500"
                             id="timer" type="number">
                     </div>
                 </div>
-                <div class="w-full px-3 mb-6 md:w-1/3 md:mb-0">
+                <div class="w-full px-3 mb-6 md:w-full md:mb-0">
                     <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="timer">
                         Question
                     </label>
@@ -88,7 +101,7 @@
                         <p class="text-xs italic text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
-                <div class="w-full px-3 mb-6 md:w-1/3 md:mb-0 ">
+                <div class="w-full px-3 mb-6 md:w-full md:mb-0 ">
                     <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="timer">
                         Explanation
                     </label>
@@ -129,7 +142,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="flex justify-end space-x-4">
                 <button type="button" wire:click="closeModal"
                     class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -153,7 +165,6 @@
     });
 
     function initializeSelect2(id) {
-
         $('#edit_topic_id').select2({
             dropdownParent: $('#edit_question_modal'), // Ensure dropdown is attached to the modal
             width: '100%',
@@ -161,7 +172,7 @@
             allowClear: true
         }).on('change', function(e) {
             var data = $(this).val();
-            console.log(data);
+            console.log("topic_id", data);
             @this.set('topic_id', data);
         });
 
@@ -172,7 +183,7 @@
             allowClear: true
         }).on('change', function(e) {
             var data = $(this).val();
-            console.log(data);
+            console.log("Question-type-id", data);
             @this.set('type', data);
         });
         $('#edit_difficulty').select2({
@@ -182,8 +193,18 @@
             allowClear: true
         }).on('change', function(e) {
             var data = $(this).val();
-            console.log(data);
+            console.log("diffic", data);
             @this.set('difficulty', data);
+        });
+        $('#edit_position').select2({
+            dropdownParent: $('#edit_question_modal'), // Ensure dropdown is attached to the modal
+            width: '100%',
+            placeholder: "Select position",
+            allowClear: true
+        }).on('change', function(e) {
+            var data = $(this).val();
+            console.log("position", data);
+            @this.set('position', data);
         });
 
 

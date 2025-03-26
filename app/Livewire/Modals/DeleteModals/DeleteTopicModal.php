@@ -53,7 +53,7 @@ class DeleteTopicModal extends ModalComponent
             // Emit an event to refresh the parent component
             $this->dispatch('topicDeleted');
         } catch (\Exception $ex) {
-            dd($ex);
+            //  dd($ex);
             noty()
                 ->livewire()
                 ->addError('Operation failed!' . $ex);
