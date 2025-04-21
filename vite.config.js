@@ -18,6 +18,17 @@ export default defineConfig({
         include: ["@tailwindConfig"],
     },
     server: {
-        host: "0.0.0.0", //This will allow the css to be rendered without any issue on other devices
+        //host: true, // Allows binding to all interfaces in local network(same network)
+        //  host: "0.0.0.0", //This will allow the css to be rendered without any issue on other devices , allow access locally or externally
+        host: "127.0.0.1",
+        port: 3000,
+        strictPort: true,
+        cors: {
+            //Cors configuration
+            origin: "*", // Allow your Laravel app,http://10.36.30.187:8000
+            methods: ["GET", "POST", "PUT", "DELETE"],
+            allowedHeaders: ["Content-Type", "Authorization"],
+            credentials: true,
+        },
     },
 });

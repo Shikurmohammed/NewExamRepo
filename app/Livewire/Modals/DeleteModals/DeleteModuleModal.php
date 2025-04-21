@@ -13,34 +13,13 @@ class DeleteModuleModal extends ModalComponent
     public $moduleId; // ID of the module to delete
     public $message; // Confirmation message
 
-    /**
-     * Mount the component.
-     *
-     * @param int $moduleId
-     * @param string $message
-     */
+
     public function mount($moduleId, $message = 'Are you sure you want to delete this item?')
     {
         $this->moduleId = $moduleId;
         $this->message = $message;
     }
 
-    /**
-     * Delete the module.
-     */
-    public function delete1()
-    {
-        // Delete the module
-        Module::find($this->moduleId)->delete();
-
-        // Close the modal
-        $this->closeModal();
-
-        // Emit an event to refresh the parent component
-        $this->dispatch('moduleDeleted');
-        noty()->livewire()
-            ->addWarning('Module removed successfully!');
-    }
     public function delete()
     {
         try {
@@ -94,6 +73,6 @@ class DeleteModuleModal extends ModalComponent
 
     public function render()
     {
-        return view('livewire.modals.delete-modals.delete-module-modal');
+        return view('livewire.modals.delete-modals.confirm-delete');
     }
 }

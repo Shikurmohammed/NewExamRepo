@@ -20,31 +20,21 @@
         <div class="modal-overlay" @click="isOpen = false" style="background: rgba(0, 0, 0, 0.5);"></div>
         <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg" x-show.transition.opacity="isOpen">
             <h2 class="mb-4 text-xl font-semibold">Create Topic</h2>
-
-            @if (session()->has('success'))
-                <div class="text-green-700">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session()->has('error'))
-                <div class="text-red-700">
-                    {{ session('error') }}
-                </div>
-            @endif
             <form wire:submit.prevent="create">
-                <div class="mb-4" wire:ignore>
+                <div class="mb-4">
                     <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="grid-module">
                         Module
                     </label>
-                    <select wire:model="module_id" id="module_id"
-                        class="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border rounded appearance-none focus:outline-none focus:bg-white">
-                        <option value="">Select Module</option>
-                        @foreach ($this->modules as $module)
-                            <option value="{{ $module->id }}">
-                                {{ $module->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative" wire:ignore>
+                        <select wire:model="module_id" id="module_id"
+                            class="block w-full px-4 py-3 mb-3 leading-tight text-gray-700 bg-gray-200 border rounded appearance-none focus:outline-none focus:bg-white">
+                            <option value="">Select Module</option>
+                            @foreach ($this->modules as $module)
+                                <option value="{{ $module->id }}">
+                                    {{ $module->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     @error('module_id')
                         <p class="text-xs italic text-red-500">{{ $message }}</p>
                     @enderror

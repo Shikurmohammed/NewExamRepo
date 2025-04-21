@@ -24,13 +24,15 @@ class QuestionModal extends Modal
 
     #[Url()]
     public $module_id;
-    // #[Rule('required')]
+    #[Rule('required')]
     public $topic_id;
     #[Rule('required')]
     public $description;
     public $explanation;
     public $enabled;
+    #[Rule('required')]
     public $type;
+    #[Rule('required')]
     public $difficulty;
     public $position;
     public $timer;

@@ -53,6 +53,11 @@ class TestModal extends Modal
         ['id' => 4, 'name' => 'topic']
     ];
 
+    protected array $messages = [
+        'test_name.required' => 'Test name is required.',
+        'exam_password.required' => 'Exam password is required.'
+    ];
+
     public function updated($propertyName)
     {
         if ($propertyName == 'start' || $propertyName == 'end') {
@@ -111,7 +116,7 @@ class TestModal extends Modal
             $test->mcma_partial_score = $this->mcma_partial_score ? 1 : 0;
             $test->noanswer_enabled = $this->noanswer_enabled ?? 0;
             $test->comment_enabled = $this->comment_enabled ? 1 : 0;
-            $test->repeatable = $this->repateable ? 1 : 0;
+            $test->repeatable = $this->repeatable ? 1 : 0;
 
             $test->result_to_user = $this->result_to_user ? 1 : 0;
             $test->report_to_user = $this->report_to_user ? 1 : 0;
@@ -128,6 +133,7 @@ class TestModal extends Modal
                     $test->groups()->attach($group_id); //Save test_id and group_id test_groups
                 }
                 noty()->livewire()->addSuccess("Test added successfully");
+                $this->dispatch('refreshTestTable');
                 $this->reset();
                 return redirect()->back(); //('/view_test');
             } else {

@@ -15,7 +15,7 @@ class QuestionImport implements ToModel, WithHeadingRow, WithValidation
 {
     public function headingRow(): int
     {
-        return 2; // Use the second row as headers
+        return 1; // Use the first row as headers
     }
 
     public function model(array $row)

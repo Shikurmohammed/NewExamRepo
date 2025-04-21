@@ -30,11 +30,12 @@ final class QuestionTable extends PowerGridComponent
                 ->showToggleColumns(),
             PowerGrid::footer()
                 ->pageName('questions')
-                ->showPerPage(perPage: 5, perPageValues: [0, 3, 10, 25, 50])
+                ->showPerPage(perPage: 10, perPageValues: [5, 10, 25, 50, 'All'])
                 ->showRecordCount(),
             PowerGrid::exportable(fileName: 'Questions')
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV)
-                ->striped('A6ACCD'),
+                ->striped('A6ACCD')->stripTags(true), // Specify columns to strip tags,
+
 
         ];
     }
@@ -55,10 +56,17 @@ final class QuestionTable extends PowerGridComponent
             ->add('id')
             ->add('topic_name', function (Question $question) {
                 // Check if the topic exists and has a name
-                return $question->topic && $question->topic->name ? $question->topic->name : 'No Topic Name';
+                return $question->topic && $question->topic->name ?
+                    $question->topic->name : 'No Topic Name';
             })
-            ->add('description')
-            ->add('explanation')
+            ->add('description', function (Question $question) {
+                // Check if the topic exists and has a name
+                return html_entity_decode($question->description);
+            })
+            ->add('explanation', function (Question $question) {
+                // Check if the topic exists and has a name
+                return html_entity_decode($question->explanation); //This will decode special characters(like &amp;) to normal (&)
+            })
             ->add('enabled')
             ->add('type')
             ->add('difficulty')
@@ -76,7 +84,7 @@ final class QuestionTable extends PowerGridComponent
         return [
             Column::action('Action'),
             Column::make('Id', 'id')->hidden(),
-            Column::make('Topic id', 'topic_name')->sortable()
+            Column::make('Topic', 'topic_name')->sortable()
                 ->searchable(),
             Column::make('Description', 'description')->sortable()
                 ->sortable()

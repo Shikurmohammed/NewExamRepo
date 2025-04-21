@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataFeedController;
 use App\Http\Controllers\DashboardController;
@@ -30,6 +31,7 @@ use App\Livewire\Examiner\ExaminerDashboard;
 use App\Livewire\Exams\QuestionAssignment;
 use App\Livewire\Exams\TestExecution;
 use App\Livewire\Exams\TestList;
+use App\Livewire\Exams\TestLoginForm;
 use App\Livewire\Groups\GroupList;
 use App\Livewire\Module;
 use App\Livewire\QuestionBank\AnswerList;
@@ -53,6 +55,7 @@ use NunoMaduro\Collision\Exceptions\TestException;
 
 // Redirect '/' to 'login'
 Route::redirect('/', 'login');
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 // Use Livewire middleware and define Livewire components
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -105,9 +108,25 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::group(['prefix' => 'MyExam', 'middleware' => ['role:10,5,1']], function () {
         Route::get('myexam_list', MyTest::class)
             ->name('myexam_list');
-        Route::get('start_exam', MyTest::class)
+        // Route::get('start_exam', MyTest::class)
+        //     ->name('start_exam');
+        // Route::get('start_exam/{testId}', [MyTest::class, 'startExam']) // Specify the method if needed
+        //     ->name('start_exam');
+
+        Route::get('start_exam/{testId}', TestExecution::class) // StartExam Specify the method if needed
             ->name('start_exam');
+        Route::get('execute_exam/{testId}', TestExecution::class) //, 'showQuestion', 'executeExam'// Specify the method if needed
+            ->name('execute_exam');
+
+        // Route::get('start_exam/{testId}', [StartExam::class, 'startTest']) // Specify the method if needed
+        //     ->name('start_exam');
+
+        // "test.info"
+        Route::get('info/{testId}', TestExecution::class) // Specify the method if needed
+            ->name('info');
+        Route::get('test_login/{testId}', TestLoginForm::class)->name('test_login');
     });
+
 
     Route::get('/mytest-list', StartExam::class)->name('mytest.list');
 });

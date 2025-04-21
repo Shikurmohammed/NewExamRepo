@@ -27,6 +27,10 @@ class Question extends Model
     }
     public function topic()
     {
-        return $this->belongsTo(Topic::class, 'topic_id', 'id');
+        return $this->belongsTo(Topic::class);
+    }
+    public function testLogs()
+    {
+        return $this->hasMany(TestLog::class, 'question_id');
     }
 }
