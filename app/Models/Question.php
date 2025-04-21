@@ -29,4 +29,8 @@ class Question extends Model
     {
         return $this->belongsTo(Topic::class);
     }
+    public function testLogs()
+    {
+        return $this->hasMany(TestLog::class, 'question_id');
+    }
 }

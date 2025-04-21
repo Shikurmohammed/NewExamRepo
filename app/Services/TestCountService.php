@@ -14,16 +14,18 @@ class TestCountService
      * @param int $testId
      * @return int
      */
+    //Counts user tests which as status >=4
     public function countUserTests(int $userId, int $testId): int
     {
         $count = DB::select("
                     SELECT COUNT(*) AS count
-                    FROM test_users
+                    FROM tests_users
                     WHERE test_id = ?
                     AND user_id = ?
                     AND status >= 4
                 ", [$testId, $userId]);
         $countValue = $count[0]->count; // Access the count value
+        // dd($countValue);
         return $countValue;
     }
 

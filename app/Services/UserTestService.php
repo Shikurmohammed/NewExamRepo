@@ -45,7 +45,7 @@ class UserTestService
         return $this->wrapInTable($html);
     }
 
-    protected function getAvailableTests()
+    public function getAvailableTests()
     {
         $query = DB::select(
             "SELECT *
@@ -63,7 +63,7 @@ class UserTestService
         return  $query;
     }
 
-    protected function renderTestRow(Test $test): string
+    public function renderTestRow(Test $test): string
     {
         [$testStatus, $testuserId] = $this->testStatusService->checkTestStatus(
             Auth::id(),
@@ -85,18 +85,18 @@ class UserTestService
         return $row;
     }
 
-    protected function renderTestNameCell(Test $test): string
+    public function renderTestNameCell(Test $test): string
     {
         $cellClass = !empty($test->password) ? ' style="background-color:#ffffcc;"' : '';
         return '<td' . $cellClass . '><strong>' . $this->getTestInfoLink($test) . '</strong></td>';
     }
 
-    protected function renderDateCell(string $date, string $style): string
+    public function renderDateCell(string $date, string $style): string
     {
         return '<td' . $style . '>' . $date . '</td>';
     }
 
-    protected function renderStatusCell(Test $test, int $testStatus, int $testuserId): string
+    public function renderStatusCell(Test $test, int $testStatus, int $testuserId): string
     {
         $cell = '<td';
         $content = '&nbsp;';
@@ -117,7 +117,7 @@ class UserTestService
         return $cell . '>' . $content . '</td>';
     }
 
-    protected function getStatusCellStyle(array $userTestData): string
+    public function getStatusCellStyle(array $userTestData): string
     {
         if (isset($userTestData['score_threshold']) && $userTestData['score_threshold'] > 0) {
             return $userTestData['user_score'] >= $userTestData['score_threshold']
@@ -127,7 +127,7 @@ class UserTestService
         return '';
     }
 
-    protected function getResultLink(array $userTestData, int $testuserId, int $testId): string
+    public function getResultLink(array $userTestData, int $testuserId, int $testId): string
     {
         $passMsg = $this->getPassMessage($userTestData);
 
@@ -148,7 +148,7 @@ class UserTestService
             $userTestData['user_score'] . $passMsg . '</a>';
     }
 
-    protected function getPassMessage(array $userTestData): string
+    public function getPassMessage(array $userTestData): string
     {
         if (isset($userTestData['test_score_threshold']) && $userTestData['test_score_threshold'] > 0) {
             return $userTestData['user_score'] >= $userTestData['test_score_threshold']
@@ -158,7 +158,7 @@ class UserTestService
         return '';
     }
 
-    protected function renderActionCell(Test $test, int $testStatus, bool $isExpired): string
+    public function renderActionCell(Test $test, int $testStatus, bool $isExpired): string
     {
         if ($isExpired) {
             return '<td style="text-align:center;"></td>';
@@ -176,7 +176,7 @@ class UserTestService
         }
     }
 
-    protected function renderStartTestLink(Test $test): string
+    public function renderStartTestLink(Test $test): string
     {
         $url = config('tce.display_test_description') || !empty($test->test_password)
             ? route('test.start', $test->test_id)
@@ -187,14 +187,14 @@ class UserTestService
             __('w_execute') . '</a></td>';
     }
 
-    protected function renderContinueTestLink(Test $test): string
+    public function renderContinueTestLink(Test $test): string
     {
         return '<td style="text-align:center;">' .
             '<a href="' . route('test.execute', $test->test_id) . '" title="' . __('h_continue') . '" class="btn btn-primary">' .
             __('w_continue') . '</a></td>';
     }
 
-    protected function renderRepeatTestLink(Test $test): string
+    public function renderRepeatTestLink(Test $test): string
     {
         $userTestCount = $this->testCountService->countUserTests(Auth::id(), $test->test_id);
 
@@ -211,7 +211,7 @@ class UserTestService
         return '<td style="text-align:center;"></td>';
     }
 
-    protected function wrapInTable(string $content): string
+    public function wrapInTable(string $content): string
     {
         if (empty($content)) {
             return __('m_no_test_available');
@@ -229,9 +229,9 @@ class UserTestService
         </table>';
     }
 
-    protected function getTestInfoLink($test): string
+    public function getTestInfoLink($test): string
     {
-        return '<a href="' . route('test.info', $test->id) . '"
+        return '<a href="' . route('info', $test->id) . '"
             onclick="window.open(this.href,\'testInfoWindow\',\'height=600,width=800,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false;"
             title="' . __('m_new_window_link') . '">' . htmlspecialchars($test->name) . '</a>';
     }

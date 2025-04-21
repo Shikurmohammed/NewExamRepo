@@ -16,11 +16,16 @@ class TestPasswordService
         }
 
         $loginKey = $password . $testId . auth()->id() . request()->ip();
-        return hash_equals(Session::get('session_test_login'), hash('sha256', $loginKey));
+        $sessionValue = Session::get('session_test_login');
+        if ($sessionValue == null) {
+            return false;
+        }
+
+        return hash_equals($sessionValue, hash('sha256', $loginKey)); //to be checked
     }
 
     public function getTestPassword(int $testId): ?string
     {
-        return Test::find($testId)->test_password;
+        return Test::find($testId)->password;
     }
 }

@@ -51,10 +51,9 @@ class TestAuthorizationService
         // This depends on your server configuration
         return $_SERVER['SSL_CLIENT_MD5'] ?? '';
     }
-
+    //This will check if the user is in a group allowed for the take test
     public function isInTestGroup($testId, $userId)
     {
-        //dd($testId, $userId);
         return DB::table('user_groups')
             ->join('test_groups', 'user_groups.group_id', '=', 'test_groups.group_id')
             ->where('test_id', $testId)

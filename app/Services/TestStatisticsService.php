@@ -38,27 +38,27 @@ class TestStatisticsService
             $result = DB::table('tests_users')
                 ->join(
                     'test_logs',
-                    'tests_users.users_id ',
+                    'tests_users.user_id',
                     '=',
-                    'test_logs.tests_users_id '
+                    'test_logs.tests_users_id'
                 )
                 ->select(
                     DB::raw('SUM(test_logs.score) as total_score'),
                     DB::raw('MAX(test_logs.change_time) as test_end_time'),
-                    'test_users.user_id',
-                    'test_users.created_at',
-                    'test_users.status',
-                    'test_users.comment'
+                    'tests_users.user_id',
+                    'tests_users.created_at',
+                    'tests_users.status',
+                    'tests_users.user_comment'
                 )
-                ->where('test_users.user_id', $testuserId)
-                ->where('test_users.test_id', $testId)
-                ->where('test_users.user_id', $userId)
-                ->where('test_users.status', '>', $statusFilter)
+                // ->where('tests_users.user_id', $testuserId)
+                ->where('tests_users.test_id', $testId)
+                //->where('tests_users.user_id', $userId)
+                ->where('tests_users.status', '>', $statusFilter)
                 ->groupBy([
-                    'test_users.user_id',
-                    'test_users.created_at',
-                    'test_users.status',
-                    'test_users.comment'
+                    'tests_users.user_id',
+                    'tests_users.created_at',
+                    'tests_users.status',
+                    'tests_users.user_comment'
                 ])
                 ->first();
 

@@ -1,4 +1,4 @@
-<div x-data="{ isOpen: @entangle('isModalOpen') }" id="assign_question_modal" class="relative">
+<div x-data="{ isOpen: @entangle('isModalOpen') }" id="assign_question_modal" class="relative z-60">
     <button @click="isOpen = true" class="px-2 py-1 mt-2 text-white rounded bg-slate-400">
         <i class="fa fa-plus-circle"></i> Assign Question
     </button>
@@ -10,32 +10,36 @@
             <h2 class="mb-4 text-xl font-semibold">Assign Question to Test</h2>
             <form wire:submit.prevent="assignQuestion" class="w-full">
                 <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-3 lg:grid-cols-3">
-                    <div wire:ignore>
+                    <div>
                         <label for="question_type"
                             class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase">Type</label>
-                        <select id="question_type" wire:model="selectedQuestionType"
-                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
-                            <option value="">Select Type</option>
-                            @foreach ($question_type as $type)
-                                <option value="{{ $type['id'] }}">{{ $type['name'] }}</option>
-                            @endforeach
-                        </select>
+                        <div wire:ignore>
+                            <select id="question_type" wire:model="selectedQuestionType"
+                                class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
+                                <option value="">Select Type</option>
+                                @foreach ($question_type as $type)
+                                    <option value="{{ $type['id'] }}">{{ $type['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         @error('selectedQuestionType')
                             <p class="text-xs italic text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div wire:ignore>
+                    <div>
                         <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
                             for="difficulty_level">Difficulty</label>
-                        <select id="difficulty_level" wire:model="selectedDifficultyLevel"
-                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
-                            <option value="">Select Difficulty</option>
-                            @foreach ($difficulty_level as $difficulty)
-                                <option value="{{ $difficulty['id'] }}">{{ $difficulty['name'] }}</option>
-                            @endforeach
-                        </select>
-                        @error('difficulty_level')
+                        <div wire:ignore>
+                            <select id="difficulty_level" wire:model="selectedDifficultyLevel"
+                                class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
+                                <option value="">Select Difficulty</option>
+                                @foreach ($difficulty_level as $difficulty)
+                                    <option value="{{ $difficulty['id'] }}">{{ $difficulty['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('selectedDifficultyLevel')
                             <p class="text-xs italic text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -52,9 +56,10 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Test</label>
                         <div wire:ignore>
-                            <select wire:model="test_id" id="test"
-                                class="block w-full p-2 mt-1 border border-gray-300 rounded-md" required>
-                                @foreach ($this->tests as $test)
+                            <select id="test" wire:model="test_id"
+                                class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
+                                <option value="">Select test</option>
+                                @foreach ($tests as $test)
                                     <option value="{{ $test->id }}">{{ $test->name }}</option>
                                 @endforeach
                             </select>
@@ -63,7 +68,7 @@
                             <p class="text-xs italic text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div wire:ignore>
+                    <div>
                         <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
                             for="topic_id">
                             Topic <i>
@@ -72,16 +77,15 @@
                                 @endif
                             </i>
                         </label>
-                        <select id="topic_id" wire:model.live="topic_ids" multiple
-                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
-                            <option value="">Select Topic</option>
-                            @foreach ($this->moduleWithTopics as $module)
-                                <option value="#{{ $module->id }}" class="font-bold">{{ $module->name }}</option>
-                                @foreach ($module->topics as $topic)
-                                    <option value="{{ $topic->id }}" class="ml-8">{{ $topic->name }}</option>
+                        <div wire:ignore>
+                            <select wire:model.live="topic_ids" multiple id="topic_id"
+                                class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
+                                @foreach ($this->moduleWithTopics as $option)
+                                    <option value="{{ $option['id'] }}" class="{{ $option['class'] }}">
+                                        {{ $option['name'] }}</option>
                                 @endforeach
-                            @endforeach
-                        </select>
+                            </select>
+                        </div>
                         @error('topic_ids')
                             <p class="text-xs italic text-red-500">{{ $message }}</p>
                         @enderror
@@ -89,17 +93,23 @@
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-1 lg:grid-cols-1">
-                    <div wire:ignore>
+                    <div>
                         <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase"
                             for="question_id">Question</label>
-                        <select id="question_id" wire:model="question_ids" multiple
-                            class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
-                            <option value="">Select questions</option>
-                            @foreach ($this->questions as $question)
-                                <option value="{{ $question['id'] }}" selected>{{ $question['description'] }}</option>
-                            @endforeach
-                        </select>
-                        @error('question_id')
+                        <div wire:ignore>
+                            <select id="question_id" wire:model="question_ids" multiple
+                                class="block w-full p-2 mt-1 border border-gray-300 rounded-md">
+                                <option value="">Select questions</option>
+                                @if ($this->questions)
+                                    @foreach ($this->questions as $question)
+                                        <option value="{{ $question['id'] }}" selected>{{ $question['description'] }}
+                                        </option>
+                                    @endforeach
+                                @endif
+
+                            </select>
+                        </div>
+                        @error('question_ids')
                             <p class="text-xs italic text-red-500">{{ $message }}</p>
                         @enderror
                     </div>

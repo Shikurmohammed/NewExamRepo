@@ -31,6 +31,7 @@ use App\Livewire\Examiner\ExaminerDashboard;
 use App\Livewire\Exams\QuestionAssignment;
 use App\Livewire\Exams\TestExecution;
 use App\Livewire\Exams\TestList;
+use App\Livewire\Exams\TestLoginForm;
 use App\Livewire\Groups\GroupList;
 use App\Livewire\Module;
 use App\Livewire\QuestionBank\AnswerList;
@@ -111,10 +112,19 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         //     ->name('start_exam');
         // Route::get('start_exam/{testId}', [MyTest::class, 'startExam']) // Specify the method if needed
         //     ->name('start_exam');
-        // Route::get('execute_exam/{testId}', [TestExecution::class, 'executeExam']) // Specify the method if needed
-        //     ->name('execute_exam');
-        Route::get('start_exam/{testId}', TestExecution::class) // Specify the method if needed
+
+        Route::get('start_exam/{testId}', TestExecution::class) // StartExam Specify the method if needed
             ->name('start_exam');
+        Route::get('execute_exam/{testId}', TestExecution::class) //, 'showQuestion', 'executeExam'// Specify the method if needed
+            ->name('execute_exam');
+
+        // Route::get('start_exam/{testId}', [StartExam::class, 'startTest']) // Specify the method if needed
+        //     ->name('start_exam');
+
+        // "test.info"
+        Route::get('info/{testId}', TestExecution::class) // Specify the method if needed
+            ->name('info');
+        Route::get('test_login/{testId}', TestLoginForm::class)->name('test_login');
     });
 
 

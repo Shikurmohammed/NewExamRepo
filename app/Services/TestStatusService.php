@@ -26,7 +26,6 @@ class TestStatusService
         $currentTime = Carbon::now();
         $testStatus = self::STATUS_NOT_STARTED;
         $testuserId = 0;
-
         // Get current test status for the user
         $testUser = DB::table('tests_users')
             ->where('test_id', $testId)
@@ -92,7 +91,7 @@ class TestStatusService
                     if ($unansweredCount === 0) {
                         // Update to "questions answered" status
                         DB::table('tests_users')
-                            ->where('user_id ', $testuserId)
+                            ->where('user_id', $testuserId)
                             ->update(['status' => self::STATUS_QUESTIONS_ANSWERED]);
 
                         $testStatus = self::STATUS_QUESTIONS_ANSWERED;

@@ -1,8 +1,39 @@
+{{-- <div class="p-6">
+    <h2 class="text-xl font-bold">Start Exam</h2>
 
-<div class="bg-white p-8 rounded shadow-md w-full max-w-5xl m-5">
+    <div class="mt-4">
+        <p>{{ $testDescription }}</p>
+    </div>
+
+    @if ($showPassword)
+        <div class="mt-4">
+            <label for="password" class="block font-semibold">Enter Test Password</label>
+            <input wire:model="password" type="password" class="w-full p-2 border rounded" />
+        </div>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="mt-2 text-red-500">{{ session('error') }}</div>
+    @endif
+
+    <button wire:click="startTest" class="px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700">
+        Start Test
+    </button>
+</div> --}}
+
+<div>
+    Question menu for the given test will be displayed here,...
+    @include('livewire.exams.test-execution')
+</div>
+
+
+
+
+{{--
+<div class="w-full max-w-5xl p-8 m-5 bg-white rounded shadow-md">
     <div class="flex justify-between">
-     <h1 class="text-2xl font-bold mb-4">Test Name</h1>
-     <div id="timer" class="text-red-500 text-xl mb-4">Time Left: <span id="timeLeft">00:00</span></div>
+     <h1 class="mb-4 text-2xl font-bold">Test Name</h1>
+     <div id="timer" class="mb-4 text-xl text-red-500">Time Left: <span id="timeLeft">00:00</span></div>
     </div>
      <div id="questionContainer" class="mb-4">
          <p id="questionText" class="text-lg">Question 1: What is your favorite color?</p>
@@ -22,8 +53,8 @@
          </div>
      </div>
      <div class="flex justify-between">
-         <button id="prevBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded" onclick="prevQuestion()" disabled>Previous</button>
-         <button id="nextBtn" class="bg-blue-500 text-white px-4 py-2 rounded" onclick="nextQuestion()">Next</button>
+         <button id="prevBtn" class="px-4 py-2 text-gray-700 bg-gray-300 rounded" onclick="prevQuestion()" disabled>Previous</button>
+         <button id="nextBtn" class="px-4 py-2 text-white bg-blue-500 rounded" onclick="nextQuestion()">Next</button>
      </div>
  </div>
 
@@ -100,4 +131,4 @@
      updateQuestion();
      startTimer();
      updateTimerDisplay();
- </script>
+ </script> --}}

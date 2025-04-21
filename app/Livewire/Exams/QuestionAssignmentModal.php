@@ -12,24 +12,41 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Rule;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class QuestionAssignmentModal extends Modal
 {
-    #[Rule(['required', 'array', 'min:1'])]
-    public array $topic_ids = [];
+    #[Rule(['required'])] // ,'array', 'min:1'
+    public array $topic_ids;
+
     #[Rule(['required'])]
     public $test_id;
+
+    public $question_ids;
+
     #[Rule(['required'])]
-    public $question_ids = [];
     public $selectedQuestionType;
+
+    #[Rule(['required'])]
     public $selectedDifficultyLevel;
+
     #[Rule(['required'])]
     public $answer_count;
-    public $question_count;
-    public $max_score =0;//May be provided from a form.
 
+    public $question_count;
+    public $max_score = 0;
+
+    protected array $messages = [
+        'topic_ids.required' => 'Topic(s) are required.', //'Please select topics to assign to the test',
+        'topic_ids.min' => 'Please select at least one topic to assign to the test',
+        'question_ids.required' => 'Please select questions to assign to the test',
+        'selectedQuestionType.required' => 'Please select a question type',
+        'selectedDifficultyLevel.required' => 'Please select a difficulty level',
+        'test_id.required' => 'Please select a test',
+        'selectedQuestionType.required' => 'Qestion type is required',
+        'selectedDifficultyLevel.required' => 'Difficulty level is required',
+        'answer_count.required' => 'Number of alternative of answer(s) is required.',
+    ];
 
     public function render()
     {
@@ -38,133 +55,166 @@ class QuestionAssignmentModal extends Modal
             ['id' => 2, 'name' => 'Multiple Answer'],
             ['id' => 3, 'name' => 'Free Answer'],
             ['id' => 4, 'name' => 'Ordering Answer']
-
         ];
+
         $difficulty_level = [
             ['id' => 1, 'name' => 'Easy'],
             ['id' => 2, 'name' => 'Medium'],
             ['id' => 3, 'name' => 'Hard']
         ];
-        return view('livewire.exams.question-assignment-modal', compact('question_type', 'difficulty_level'));
+        $tests = Test::all();
+        return view(
+            'livewire.exams.question-assignment-modal',
+            compact('question_type', 'difficulty_level', 'tests')
+        );
     }
 
     #[Computed()]
     public function moduleWithTopics()
     {
-        return Module::where('enabled', 1)
+        $modules = Module::where('enabled', 1)
             ->with(['topics' => function ($query) {
                 $query->where('enabled', 1);
             }])
             ->get();
+
+        $options = [];
+
+        foreach ($modules as $module) {
+            // Add module (Bold)
+            $options[] = [
+                'id' => '#' . $module->id,
+                'name' => '(Module) ' . $module->name,
+                'is_module' => true,
+                'class' => 'cursor-pointer p-2 hover:bg-gray-200 font-bold'
+
+            ];
+
+            // Add its topics
+            foreach ($module->topics as $topic) {
+                $options[] = [
+                    'id' => (string) $topic->id,
+                    'name' => '— ' . $topic->name,
+                    'is_module' => false,
+                    'class' => 'cursor-pointer p-2 hover:bg-gray-200 pl-4'
+                ];
+            }
+        }
+
+        return $options;
     }
+
     #[Computed()]
     public function questions()
     {
-        $questions = [];
-
         if (empty($this->topic_ids)) {
-            $questions = Question::all();
-        } else {
-            $questions = Question::whereIn('topic_id', $this->topic_ids)->get();
+            return Question::all();
         }
 
+        $topics = [];
+        $modules = [];
 
-        return   $questions;
-    }
+        foreach ($this->topic_ids as $id) {
+            if (str_starts_with($id, '#')) {
+                $modules[] = str_replace('#', '', $id);
+            } else {
+                $topics[] = $id;
+            }
+        }
 
-    #[Computed()]
-    public function tests()
-    {
-        return Test::all();
+        // Debugging: Check what we got for topics and modules
+        // Log::info('Selected Topics:', $topics);
+        // Log::info('Selected Modules:', $modules);
+
+        // Fetch topic IDs linked to selected modules
+        $moduleTopicIds = Topic::whereIn('module_id', $modules)->pluck('id')->toArray();
+
+        // Debugging: Check the fetched module topic IDs
+        //Log::info('Module Topic IDs:', $moduleTopicIds);
+
+        // Merge topic IDs
+        $allTopicIds = array_merge($topics, $moduleTopicIds);
+
+        // Debugging: Final topic IDs used for filtering
+        //Log::info('Final Topic IDs for Filtering:', $allTopicIds);
+
+        // Fetch questions based on topics
+        $questions = Question::whereIn('topic_id', $allTopicIds)->get();
+
+        // Debugging: Check the final query result
+        Log::info('Filtered Questions:', $questions->toArray());
+
+        return Question::whereIn('topic_id', $allTopicIds)->get();;
     }
 
     public function assignQuestion()
     {
         $this->validate();
         try {
-            // Check if the test is in use in test_users table
             $isTestUsedInTestUsers = DB::table('tests_users')->where('test_id', $this->test_id)->exists();
             if ($isTestUsedInTestUsers) {
                 noty()->livewire()->addError('Attention, Test is in use!');
-                //return redirect()->back();
-                //  return response()->json(['err' => 'Attention, Test is in use ']);
                 return;
             }
+
             $selectedTopics = $this->topic_ids;
-            $selectedTopics = [$selectedTopics];
             $selectedQuestions = $this->question_ids;
-            $selectedQuestions = [$selectedQuestions];
             $answers = $this->answer_count;
             $difficulty = $this->selectedDifficultyLevel;
-            $quantity = count($selectedQuestions) ?? 1;
+            // $quantity = count($selectedQuestions) ?? 1;
+            $quantity = $this->question_count;
+            //  dd($quantity);
+
+            // dd($selectedQuestions);
+            // dd($difficulty,  $answers, $this->selectedQuestionType);
 
             if ($selectedTopics && $quantity) {
                 if ($this->selectedQuestionType == 3) {
-                    $answers = 0; // Free answer has no alternative answers to display!
+                    $answers = 0;
                 } elseif ($answers < 2 && $difficulty > 0) {
-                    $answers = 2; // Questions must have at least 2 alternative answers
+                    $answers = 2;
                 }
-                //Some modifictions needed here, i.e to accept module ids from a form
-                $sql_question_position = '';
-                $sql_answer_position = '';
+                $test = Test::find($this->test_id);
+                $selectedTopicsString = implode(',', array_map(function ($id) {
+                    return str_starts_with($id, '#') ? str_replace('#', '', $id) : $id;
+                }, $selectedTopics));
 
-                dd($this->test_id);
-                $test = Test::where('id', $this->test_id)->get();
-                dd($test);
-                $random_questions_order = $test->random_questions_select;
-                $questions_order_mode = $test->questions_order_mode;
-                $random_answers_order = $test->random_answers_order;
-                $answers_order_mode = $test->answers_order_mode;
+                // $sql = "SELECT COUNT(*) as total_questions FROM questions WHERE topic_id IN ($selectedTopicsString) AND difficulty = ?";
+                // $bindings = [$difficulty];
+
+                // if ($test->type > 0) {
+                //     $sql .= " AND type = ?";
+                //     $bindings[] = $test->type;
+                // }
+
+                // $sql .= " LIMIT $quantity";
+
+                // $total_questions = DB::select($sql, $bindings);
+                // dd(count($total_questions));
 
 
-                //Ensure that questions orderd by positions if the random_questions_select is false and questions_order_mode is 0
-                if (!$random_questions_order && $questions_order_mode == 0) {
-                    //Ensures that only questions with postion value > 0 are included in the sql query
-                    $sql_question_position .= 'AND position > 0';
-                }
-                if (!$random_answers_order && $answers_order_mode == 0) {
-                    $sql_answer_position .= 'AND position > 0';
-                }
-                //dd($selectedTopics);
-
-                $selectedTopicsString = implode(',', $selectedTopics);
-                //Check if the number of questions required for the test is available
-                //Here we need to track reusable and non-reusable questions,To do...
-                $sql = "SELECT COUNT(*) as total_questions FROM questions WHERE topic_id IN ($selectedTopicsString) AND difficulty = ? AND enabled = 1";
+                $sql = "SELECT COUNT(*) as total_questions FROM questions WHERE topic_id IN ($selectedTopicsString) AND difficulty = ?";
                 $bindings = [$difficulty];
 
                 if ($test->type > 0) {
                     $sql .= " AND type = ?";
                     $bindings[] = $test->type;
                 }
-                //If Question type is multiple choice single answer, ensure it has enough answers, at least 2
-                if ($test->type == 1) {
-                    $sql .= " AND id IN (SELECT question_id FROM answers WHERE enabled = 1 AND is_right = 1 $sql_answer_position GROUP BY question_id HAVING COUNT(id) > 0)";
-                    $sql .= " AND id IN (SELECT question_id FROM answers WHERE enabled = 1 AND is_right = 0 $sql_answer_position GROUP BY question_id HAVING COUNT(id) > 0)";
-                }
-                //If Question type is multiple choice multiple answer, ensure it has enough answers, at least 2
-                if ($test->type == 2) {
-                    $sql .= " AND id IN (SELECT question_id FROM answers WHERE enabled = 1 $sql_answer_position GROUP BY question_id HAVING COUNT(id) > ?)";
-                    $bindings[] = $answers;
-                }
-                //For Ordering questions, ensure that the questions has enough answers
-                if ($test->type == 4) {
-                    $sql .= " AND question_id IN (SELECT question_id FROM answers WHERE enabled = 1 AND position > 0 GROUP BY question_id HAVING COUNT(id) > ?)";
-                    $bindings[] = $answers;
-                }
-                //IF Database is ORACLE :  $sqlq = 'SELECT * FROM (' . $sqlq . ') WHERE rownum <= ' . $uantity . '';
-                $sql .= " $sql_question_position LIMIT $quantity";
 
-                $total_questions = DB::select($sql, $bindings); //Get the total number of questions available
+                // Removed LIMIT, as it's not needed for COUNT
+                $total_questions = DB::select($sql, $bindings);
 
-                if (count($total_questions) < $quantity) { //Check if the number of questions required for the test is available
+                // Since count will return an array, retrieve the total_questions value
+                $questionCount = $total_questions[0]->total_questions;
+
+                //dd($questionCount);
+
+                if ($questionCount < $quantity) { //<
                     noty()->livewire()->addError("There are not enough questions available for the test");
-                    //return redirect()->back();
-                    return response()->json(['err' => count($total_questions) . 'There are not enough questions available for the test' . $quantity . " Answer:" . $answers]);
+                    return;
                 }
 
                 if ($selectedTopics !== []) {
-                    //Inser topics to this test
                     $test_topic_set = new Test_topic_sets();
                     $test_topic_set->test_id = $this->test_id;
                     $test_topic_set->type = $test->type;
@@ -172,59 +222,47 @@ class QuestionAssignmentModal extends Modal
                     $test_topic_set->quantity = $quantity;
                     $test_topic_set->answers = $answers;
                     $test_topic_set->save();
-
                     foreach ($selectedTopics as $topic) {
                         DB::table('test_topics')->insert([
-                            'topic_id' => $topic,
+                            'topic_id' => str_starts_with($topic, '#') ? str_replace('#', '', $topic) : $topic,
                             'test_topic_set_id' => $test_topic_set->id
                         ]);
                     }
                 }
             } else {
-                noty()->livewire()->addError("Please select topics and questions to assign to the test");
-                //return redirect()->back();
-                return response()->json(['err' => 'Please select topics and questions to assign to the test ']);
-            }
 
-            return response()->json([
-                'success' => 'Question assigned successfully',
-                'selected_topics' => $selectedTopics,
-                'selected_questions' => $selectedQuestions,
-                'test name' => $this->test_id,
-                'type' => $this->type,
-                'difficulty' => $this->difficulty,
-                'ToSave' => $test_topic_set
-            ]);
+                noty()->livewire()->addError("Please select topics and questions to assign to the test");
+                return;
+            }
+            // dd("asda");
+
+            noty()->livewire()->addSuccess("Question assigned successfully");
         } catch (\Exception $e) {
             DB::rollBack();
             noty()->livewire()->addError("Error!" . $e->getMessage());
-            return response()->json(['err' => 'Fail: ' . $e->getMessage()]);
         }
     }
 
     public function updated($propertyName)
     {
-        //Count questions for the selected module or topic
-        if (str_starts_with($propertyName, 'topic_ids')) {
+        if ($propertyName === 'topic_ids') {
+            $this->question_count = 0;
+            $newTopics = [];
 
             foreach ($this->topic_ids as $id) {
-                $sql = "";
-                if (str_starts_with($id, '#')) { //If Id starts with #, it will be a mdoule id
-                    $id = str_replace('#', '', $id);
-                    //For topics under this module, we will count the number of enabled questions available
-                    $sql .= "SELECT COUNT(q.id) as total_questions
-                      from modules as m join  topics as t on m.id = t.module_id
-                      LEFT JOIN questions As q on t.id = q.topic_id
-                      where t.module_id =:module_id GROUP BY m.id";
-                    $res = DB::select($sql, ["module_id" => $id]);
-                    $this->question_count = !empty($res) ? $res[0]->total_questions : 0;
+                if (str_starts_with($id, '#')) {
+                    $moduleId = str_replace('#', '', $id);
+                    $moduleTopics = Topic::where('module_id', $moduleId)->pluck('id')->toArray();
+                    $newTopics = array_merge($newTopics, $moduleTopics);
                 } else {
-                    $sql .= "SELECT COUNT(q.id) as total_questions FROM topics as t LEFT JOIN questions
-                            as q on t.id = q.topic_id where t.id=:topic_id group by t.id";
-                    $res = DB::select($sql, ["topic_id" => $id]);
-                    $this->question_count = !empty($res) ? $res[0]->total_questions : 0;
+                    $newTopics[] = $id;
                 }
             }
+
+            $this->topic_ids = array_unique($newTopics);
+            $this->question_count = Question::whereIn('topic_id', $this->topic_ids)->count();
+
+            $this->question_ids = null; //reset question ids, otherwise the select box may not be updated
         }
     }
 }

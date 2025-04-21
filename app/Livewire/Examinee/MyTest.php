@@ -11,35 +11,39 @@ use Livewire\Component;
 
 class MyTest extends Component
 {
-    #[Computed()]
-    public  function tests()
-    {
-        return Test::all();
-    }
-    // public function startExam($id)
-    // {
-    //     return redirect()->route('mytest.list');
-    // }
 
-    public function startExam(TestExecutionService $testService, $testId)
-    {
 
-        try {
-            if ($testService->executeTest($testId)) {
-                return redirect()->route('mytest.list');
-            }
-        } catch (\Throwable $th) {
-            return back()->with('error', 'Unable to start test' . $th->getMessage());
-        }
-    }
-    public function executeExam($id) {}
-    // public function render()
+    // public function startExam(TestExecutionService $testService, $testId)
     // {
-    //     return view('livewire.examinee.my-test');
+
+    //     dd("Inside startExam");
+    //     try {
+    //         if ($testService->executeTest($testId)) {
+    //             return redirect()->route('mytest.list');
+    //         }
+    //     } catch (\Throwable $th) {
+    //         return back()->with('error', 'Unable to start test' . $th->getMessage());
+    //     }
     // }
+    // public function executeExam($id) {}
+    // // public function render()
+    // // {
+    // //     return view('livewire.examinee.my-test');
+    // // }
 
     public function render()
     {
-        return view('livewire.examinee.my-test', ['tests' => $this->tests]);
+        // $userId = Auth::id();
+        // $tests = DB::select("
+        //     SELECT t.*, tu.*
+        //     FROM tests t
+        //     JOIN tests_users tu ON t.id = tu.test_id
+        //     WHERE tu.user_id = ?
+        //     AND tu.status < 5
+        //     ORDER BY t.start DESC
+        // ", [$userId]);
+        //dd($tests);
+
+        return view('livewire.examinee.my-test');
     }
 }

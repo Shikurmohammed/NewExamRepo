@@ -106,7 +106,7 @@ class QuestionForm extends Component
     protected function markQuestionAsDisplayed()
     {
         if (!$this->question->testlog_display_time) {
-            $this->question->update(['testlog_display_time' => now()]);
+            $this->question->update(['display_time' => now()]);
         }
     }
 
